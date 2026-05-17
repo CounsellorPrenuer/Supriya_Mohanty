@@ -22,13 +22,40 @@ const urlFor = (source: any) => builder.image(source).fit("crop").url();
 
 export default function Home() {
   const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    client.fetch(query).then(setData).catch(() => setData(null));
+    client
+      .fetch(query)
+      .then((res) => {
+        if (!res) {
+          setLoadError("Sanity returned no published site content.");
+        }
+        setData(res);
+      })
+      .catch(() => {
+        setLoadError("Sanity content could not be loaded. Add GitHub Pages domain to Sanity CORS.");
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
-  if (!data) {
+  if (isLoading) {
     return <main style={{padding: 48}}>Loading content...</main>;
+  }
+
+  if (!data) {
+    return (
+      <main style={{padding: 48, lineHeight: 1.8}}>
+        <h2 style={{marginTop: 0}}>Content Connection Required</h2>
+        <p>{loadError ?? "Could not load content from Sanity."}</p>
+        <p style={{marginBottom: 0}}>
+          In Sanity project settings, add this CORS origin:
+          <br />
+          <strong>https://counsellorprenuer.github.io</strong>
+        </p>
+      </main>
+    );
   }
 
   return (
