@@ -61,36 +61,25 @@ const fallbackData = {
 
 export default function Home() {
   const [data, setData] = useState<any>(fallbackData);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
     client
-      .fetch(query)
+      .fetch(query, {}, {signal: controller.signal})
       .then((res) => {
-        if (!res) {
-          setLoadError("Sanity returned no published site content.");
-          return;
-        }
-        setData({...fallbackData, ...res});
+        if (res) setData({...fallbackData, ...res});
       })
-      .catch(() => {
-        setLoadError("Sanity content could not be loaded. Add GitHub Pages domain to Sanity CORS.");
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
+      .catch(() => {});
 
-  if (isLoading) {
-    return <main style={{padding: 48}}>Loading content...</main>;
-  }
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, []);
 
   return (
     <main className="site-shell">
-      {loadError ? (
-        <div style={{maxWidth: 1200, margin: "0 auto", padding: "14px 20px", color: "#8a5a00", background: "#fff8e7", border: "1px solid #f3d7a2", borderRadius: 12}}>
-          Live Sanity sync is temporarily blocked by CORS. Showing latest fallback content.
-        </div>
-      ) : null}
       <header className="topbar">
         <nav className="nav-wrap">
           <div className="brand">
