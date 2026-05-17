@@ -1,3 +1,6 @@
+"use client";
+
+import {useEffect, useState} from "react";
 import {Check, X} from "lucide-react";
 import {client} from "@/sanity/lib/client";
 import groq from "groq";
@@ -17,11 +20,15 @@ const navItems = [
 const builder = createImageUrlBuilder(client);
 const urlFor = (source: any) => builder.image(source).fit("crop").url();
 
-export default async function Home() {
-  const data = await client.fetch<any>(query);
+export default function Home() {
+  const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    client.fetch(query).then(setData).catch(() => setData(null));
+  }, []);
 
   if (!data) {
-    return <main style={{padding: 48}}>No Sanity content found. Add content in /studio.</main>;
+    return <main style={{padding: 48}}>Loading content...</main>;
   }
 
   return (
