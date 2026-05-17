@@ -22,10 +22,24 @@ const urlFor = (source: any) => builder.image(source).fit("crop").url();
 
 const fallbackData = {
   brandName: "LeapMentor",
+  logo: {
+    _type: "image",
+    asset: {
+      _type: "reference",
+      _ref: "image-97ed91a89fb1ab61ef6588a4d77545da4c7a5db8-4267x4267-png",
+    },
+  },
   tagline: "Leap to clarity - find your right career path!",
   homeIntro:
     "We guide students, parents and professionals to make informed career choices through scientific assessments and expert counselling. Our mission is to make young minds aware about the importance of making informed education and career decisions in order to work towards a satisfying career journey. Our services include psychometric assessment evaluation, one-on-one career counselling, guidance for higher education tailored to your needs, bridge the gap between education, skills and opportunities and parental guidance.",
   founderName: "Supriya Mohanty",
+  founderPhoto: {
+    _type: "image",
+    asset: {
+      _type: "reference",
+      _ref: "image-2c825db775a94d47c816a61563b77fb3784b7730-1500x2100-jpg",
+    },
+  },
   founderBio:
     "An astute education professional with over 25 years of experience in the domestic as well as overseas education sector with expertise in training, counselling and guidance. Working with students in diverse capacities has been a defining aspect of my professional journey.",
   services: [
