@@ -20,8 +20,47 @@ const navItems = [
 const builder = createImageUrlBuilder(client);
 const urlFor = (source: any) => builder.image(source).fit("crop").url();
 
+const fallbackData = {
+  brandName: "LeapMentor",
+  tagline: "Leap to clarity - find your right career path!",
+  homeIntro:
+    "We guide students, parents and professionals to make informed career choices through scientific assessments and expert counselling. Our mission is to make young minds aware about the importance of making informed education and career decisions in order to work towards a satisfying career journey. Our services include psychometric assessment evaluation, one-on-one career counselling, guidance for higher education tailored to your needs, bridge the gap between education, skills and opportunities and parental guidance.",
+  founderName: "Supriya Mohanty",
+  founderBio:
+    "An astute education professional with over 25 years of experience in the domestic as well as overseas education sector with expertise in training, counselling and guidance. Working with students in diverse capacities has been a defining aspect of my professional journey.",
+  services: [
+    {
+      name: "Career Guidance & Counselling",
+      description:
+        "We offer specialized career guidance to help students, college graduates, and working professionals make informed decisions about their education and career paths.",
+      audience: "Class 8 to 12 students, College graduates",
+      mode: "Online and Offline",
+    },
+    {
+      name: "Admission Guidance",
+      description:
+        "We recommend education streams and pathways by offering personalized guidance for college and university admissions, including career counselling and entrance exam guidance.",
+      audience: "Class 8 to 12 students, College graduates",
+      mode: "Online and Offline",
+    },
+  ],
+  packagesTitle: "Mentoria's Plans",
+  packageAudienceGroups: [],
+  customPackagesTitle: "Customise Your Mentorship Plan",
+  customPackagesSubtitle:
+    "If you want to subscribe to specific services that resolve your career challenges, you can choose one or more of the following.",
+  customPackages: [],
+  testimonials: [],
+  phone: "7829736276",
+  email: "mohanty.supriya65@gmail.com",
+  office: "NA",
+  instagram: "https://www.instagram.com/supriyam196/",
+  linkedin: "https://www.linkedin.com/in/supriya-mohanty-5b5145185/",
+  facebook: "https://www.facebook.com/profile.php?id=100074170277954",
+};
+
 export default function Home() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<any>(fallbackData);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -31,8 +70,9 @@ export default function Home() {
       .then((res) => {
         if (!res) {
           setLoadError("Sanity returned no published site content.");
+          return;
         }
-        setData(res);
+        setData({...fallbackData, ...res});
       })
       .catch(() => {
         setLoadError("Sanity content could not be loaded. Add GitHub Pages domain to Sanity CORS.");
@@ -44,22 +84,13 @@ export default function Home() {
     return <main style={{padding: 48}}>Loading content...</main>;
   }
 
-  if (!data) {
-    return (
-      <main style={{padding: 48, lineHeight: 1.8}}>
-        <h2 style={{marginTop: 0}}>Content Connection Required</h2>
-        <p>{loadError ?? "Could not load content from Sanity."}</p>
-        <p style={{marginBottom: 0}}>
-          In Sanity project settings, add this CORS origin:
-          <br />
-          <strong>https://counsellorprenuer.github.io</strong>
-        </p>
-      </main>
-    );
-  }
-
   return (
     <main className="site-shell">
+      {loadError ? (
+        <div style={{maxWidth: 1200, margin: "0 auto", padding: "14px 20px", color: "#8a5a00", background: "#fff8e7", border: "1px solid #f3d7a2", borderRadius: 12}}>
+          Live Sanity sync is temporarily blocked by CORS. Showing latest fallback content.
+        </div>
+      ) : null}
       <header className="topbar">
         <nav className="nav-wrap">
           <div className="brand">
